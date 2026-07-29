@@ -8,12 +8,20 @@ import adoptionsRouter from "./routes/adoption.router.js";
 import sessionsRouter from "./routes/sessions.router.js";
 import mocksRouter from "./routes/mocks.router.js";
 
+import dotenv from 'dotenv'
+
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './docs/swagger.js';
+
+dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 8080;
-const connection = mongoose.connect(`mongodb://localhost:27017/adoptme`);
+const connection = mongoose.connect(process.env.MONGO_URL)
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api/users", usersRouter);
 app.use("/api/pets", petsRouter);
